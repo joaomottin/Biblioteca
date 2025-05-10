@@ -1,6 +1,6 @@
 package model;
 
-public class Livro {
+public class Livro implements Bibliotecavel{
     private String titulo, autor, categoria;
     private int id, exemplares, anoPublicacao;
     
@@ -67,5 +67,9 @@ public class Livro {
                 + ", exemplares=" + exemplares + ", anoPublicacao=" + anoPublicacao + "]";
     }
 
+    @Override
+    public String getDescricao() {
+        return "Livro: " + titulo + " por " + autor + " (" + anoPublicacao + ")";
+    }
     
 }

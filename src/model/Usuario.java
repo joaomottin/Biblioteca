@@ -2,9 +2,9 @@ package model;
 
 import java.util.List;
 
-public class Usuario {
+public class Usuario implements Bibliotecavel{
     private String nome, endereco, email;
-    private int telefone;
+    private String telefone;
     private List<Emprestimo> emprestimos;
 
     public String getNome() {
@@ -25,12 +25,18 @@ public class Usuario {
     public void setEmail(String email) {
         this.email = email;
     }
-    public int getTelefone() {
+    public String getTelefone() {
         return telefone;
     }
-    public void setTelefone(int telefone) {
+    public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
+
+    @Override
+    public String getDescricao() {
+        return "Usuário: " + nome + " - Email: " + email;
+    }
+
     @Override
     public String toString() {
         return "Usuarios [nome=" + nome + ", endereco=" + endereco + ", email=" + email + ", telefone=" + telefone

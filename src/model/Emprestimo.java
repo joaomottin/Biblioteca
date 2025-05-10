@@ -2,7 +2,7 @@ package model;
 
 import java.time.LocalDate;
 
-public class Emprestimo {
+public class Emprestimo implements Bibliotecavel{
     private Livro livro;
     private Usuario usuario;
     private LocalDate dataEmprestimo;
@@ -16,7 +16,7 @@ public class Emprestimo {
         this.dataEmprestimo = dataEmprestimo;
         this.dataDevolucaoPrevista = dataDevolucaoPrevista;
         this.dataDevolucaoReal = dataDevolucaoReal;
-        this.atrasado = atrasado;
+        this.atrasado = false;
     }
 
     public Livro getLivro() {
@@ -73,5 +73,10 @@ public class Emprestimo {
                 + ", dataDevolucaoPrevista=" + dataDevolucaoPrevista + ", dataDevolucaoReal=" + dataDevolucaoReal
                 + ", atrasado=" + atrasado + "]";
     }
-    
+
+    @Override
+    public String getDescricao() {
+        return "Empréstimo do livro '" + livro.getTitulo() + "' para " + usuario.getNome() +
+               ", devolução prevista em " + dataDevolucaoPrevista;
+    }
 }
