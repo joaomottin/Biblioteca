@@ -1,47 +1,26 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Usuario implements Bibliotecavel{
-    private String nome, endereco, email;
-    private String telefone;
-    private List<Emprestimo> emprestimos;
+public class Usuario extends Pessoa {
+    private final List<Emprestimo> emprestimos = new ArrayList<>();
 
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-    public String getEndereco() {
-        return endereco;
-    }
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
-    }
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    public String getTelefone() {
-        return telefone;
-    }
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
+    public Usuario(String nome, String endereco, String email, String telefone) {
+        super(nome, endereco, email, telefone);
     }
 
-    @Override
-    public String getDescricao() {
-        return "Usuário: " + nome + " - Email: " + email;
+    public List<Emprestimo> getEmprestimos() {
+        return emprestimos;
     }
 
     @Override
     public String toString() {
-        return "Usuarios [nome=" + nome + ", endereco=" + endereco + ", email=" + email + ", telefone=" + telefone
-                + "]";
+        return String.format("[Usu ID:%d] %s | Email: %s | Tel: %s | End: %s", id, nome, email, telefone, endereco);
     }
 
-    
+    @Override
+    public String getDescricao() {
+        return toString();
+    }
 }

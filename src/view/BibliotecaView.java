@@ -1,125 +1,147 @@
-// faz a main
+// view/BibliotecaView.java
 package view;
 
-import controller.BibliotecaController;
-import model.Emprestimo;
+import controller.LivroController;
+import controller.UsuarioController;
+import controller.FuncionarioController;
+import controller.EmprestimoController;
+import model.Funcionario;
 import model.Livro;
 import model.Usuario;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
-public abstract class BibliotecaView {
+public class BibliotecaView {
     public static void main(String[] args) {
-        BibliotecaController controller = new BibliotecaController();
-        Scanner scanner = new Scanner(System.in);
+        LivroController livroCtrl = new LivroController();
+        UsuarioController usuarioCtrl = new UsuarioController();
+        FuncionarioController funcionarioCtrl = new FuncionarioController();
+        EmprestimoController emprestimoCtrl = new EmprestimoController();
 
+        Scanner scanner = new Scanner(System.in);
         int opcao;
+
         do {
             System.out.println("\n=== SISTEMA DE BIBLIOTECA ===");
             System.out.println("1. Cadastrar Livro");
-            System.out.println("2. Cadastrar Usuário");
-            System.out.println("3. Listar Livros");
-            System.out.println("4. Listar Usuários");
-            System.out.println("5. Registrar Empréstimo");
-            System.out.println("6. Registrar Devolução");
-            System.out.println("7. Listar Empréstimos");
-            System.out.println("8. Listar Empréstimos por Usuário");
-            System.out.println("9. Listar Empréstimos Atrasados");
+            System.out.println("2. Listar Livros");
+            System.out.println("3. Pesquisar Livro");
+            System.out.println("4. Cadastrar Usuário");
+            System.out.println("5. Listar Usuários");
+            System.out.println("6. Cadastrar Funcionário");
+            System.out.println("7. Listar Funcionários");
+            System.out.println("8. Registrar Empréstimo");
+            System.out.println("9. Registrar Devolução");
+            System.out.println("10. Listar Empréstimos");
+            System.out.println("11. Relatório: Livros emprestados atualmente");
+            System.out.println("12. Relatório: Usuários com devolução em atraso");
+            System.out.println("13. Relatório: Livros mais populares");
             System.out.println("0. Sair");
-            System.out.print("Escolha uma opção: ");
-            opcao = scanner.nextInt();
-            scanner.nextLine(); // limpar buffer
+            System.out.print("Opção: ");
+
+            opcao = Integer.parseInt(scanner.nextLine());
 
             switch (opcao) {
-                case 1 -> {
-                    System.out.print("Título: ");
-                    String titulo = scanner.nextLine();
-                    System.out.print("Autor: ");
-                    String autor = scanner.nextLine();
-                    System.out.print("Categoria: ");
-                    String categoria = scanner.nextLine();
-                    System.out.print("ID: ");
-                    int id = scanner.nextInt();
-                    System.out.print("Quantidade de exemplares: ");
-                    int exemplares = scanner.nextInt();
-                    System.out.print("Ano de publicação: ");
-                    int ano = scanner.nextInt();
-
-                    Livro livro = new Livro(titulo, autor, categoria, id, exemplares, ano);
-                    controller.cadastrarLivro(livro);
+                case 1 -> cadastrarLivro(scanner, livroCtrl);
+                case 2 -> livroCtrl.listarLivros().forEach(System.out::println);
+                case 3 -> pesquisarLivro(scanner, livroCtrl);
+                case 4 -> cadastrarUsuario(scanner, usuarioCtrl);
+                case 5 -> usuarioCtrl.listarUsuarios().forEach(System.out::println);
+                case 6 -> cadastrarFuncionario(scanner, funcionarioCtrl);
+                case 7 -> funcionarioCtrl.listarFuncionarios().forEach(System.out::println);
+                case 8 -> registrarEmprestimo(scanner, livroCtrl, usuarioCtrl, emprestimoCtrl);
+                case 9 -> registrarDevolucao(scanner, emprestimoCtrl);
+                case 10 -> emprestimoCtrl.listarEmprestimos().forEach(System.out::println);
+                case 11 -> emprestimoCtrl.listarEmprestimosAtivos().forEach(System.out::println);
+                case 12 -> {
+                    var atrasados = emprestimoCtrl.listarUsuariosComAtraso(7);
+                    if (atrasados.isEmpty()) System.out.println("Nenhum usuário com atraso.");
+                    else atrasados.forEach(System.out::println);
                 }
-
-                case 2 -> {
-                    System.out.print("Nome: ");
-                    String nome = scanner.nextLine();
-                    System.out.print("Endereço: ");
-                    String endereco = scanner.nextLine();
-                    System.out.print("Email: ");
-                    String email = scanner.nextLine();
-                    System.out.print("Telefone: ");
-                    String telefone = scanner.nextLine();
-
-                    Usuario usuario = new Usuario();
-                    usuario.setNome(nome);
-                    usuario.setEndereco(endereco);
-                    usuario.setEmail(email);
-                    usuario.setTelefone(telefone);
-                    controller.cadastrarUsuario(usuario);
+                case 13 -> {
+                    var populares = emprestimoCtrl.livrosMaisPopulares();
+                    if (populares.isEmpty()) System.out.println("Nenhum empréstimo registrado.");
+                    else populares.forEach(e ->
+                        System.out.printf("%s -> %d empréstimos\n", e.getKey().getTitulo(), e.getValue()));
                 }
-
-                case 3 -> controller.listarLivros().forEach(System.out::println);
-
-                case 4 -> controller.listarUsuarios().forEach(System.out::println);
-
-                case 5 -> {
-                    System.out.print("ID do livro: ");
-                    int idLivro = scanner.nextInt();
-                    scanner.nextLine();
-                    System.out.print("Email do usuário: ");
-                    String email = scanner.nextLine();
-                    System.out.print("Dias para devolução: ");
-                    int dias = scanner.nextInt();
-                    controller.registrarEmprestimo(idLivro, email, dias);
-                }
-
-                case 6 -> {
-                    System.out.print("Email do usuário para devolução: ");
-                    String emailDev = scanner.nextLine();
-                    List<Emprestimo> emprestimos = controller.listarEmprestimosPorUsuario(emailDev);
-                    if (emprestimos.isEmpty()) {
-                        System.out.println("Nenhum empréstimo encontrado.");
-                        break;
-                    }
-
-                    for (int i = 0; i < emprestimos.size(); i++) {
-                        System.out.println((i + 1) + " - " + emprestimos.get(i));
-                    }
-
-                    System.out.print("Escolha o número do empréstimo a devolver: ");
-                    int escolha = scanner.nextInt();
-                    if (escolha >= 1 && escolha <= emprestimos.size()) {
-                        controller.registrarDevolucao(emprestimos.get(escolha - 1), LocalDate.now());
-                    }
-                }
-
-                case 7 -> controller.listarEmprestimos().forEach(System.out::println);
-
-                case 8 -> {
-                    System.out.print("Email do usuário: ");
-                    String email = scanner.nextLine();
-                    controller.listarEmprestimosPorUsuario(email).forEach(System.out::println);
-                }
-
-                case 9 -> controller.listarEmprestimosAtrasados().forEach(System.out::println);
-
-                case 0 -> System.out.println("Encerrando o sistema...");
+                case 0 -> System.out.println("Saindo...");
                 default -> System.out.println("Opção inválida.");
             }
-
         } while (opcao != 0);
 
         scanner.close();
+    }
+
+    private static void cadastrarLivro(Scanner sc, LivroController ctrl) {
+        System.out.print("ID: ");
+        int id = Integer.parseInt(sc.nextLine());
+        System.out.print("Título: ");
+        String titulo = sc.nextLine();
+        System.out.print("Autor: ");
+        String autor = sc.nextLine();
+        System.out.print("Categoria: ");
+        String categoria = sc.nextLine();
+        System.out.print("Exemplares: ");
+        int exemplares = Integer.parseInt(sc.nextLine());
+        System.out.print("Ano de Publicação: ");
+        int ano = Integer.parseInt(sc.nextLine());
+        ctrl.cadastrarLivro(new Livro(id, titulo, autor, categoria, exemplares, ano));
+        System.out.println("Livro cadastrado.");
+    }
+
+    private static void pesquisarLivro(Scanner sc, LivroController ctrl) {
+        System.out.print("Pesquisar por (id, titulo, autor, categoria): ");
+        String tipo = sc.nextLine();
+        System.out.print("Termo: ");
+        String termo = sc.nextLine();
+        List<Livro> encontrados = ctrl.pesquisarPor(termo, tipo);
+        if (encontrados.isEmpty()) System.out.println("Nenhum livro encontrado.");
+        else encontrados.forEach(System.out::println);
+    }
+
+    private static void cadastrarUsuario(Scanner sc, UsuarioController ctrl) {
+        System.out.print("Nome: ");
+        String nome = sc.nextLine();
+        System.out.print("Endereço: ");
+        String endereco = sc.nextLine();
+        System.out.print("Email: ");
+        String email = sc.nextLine();
+        System.out.print("Telefone: ");
+        String telefone = sc.nextLine();
+        ctrl.cadastrarUsuario(new Usuario(nome, endereco, email, telefone));
+        System.out.println("Usuário cadastrado.");
+    }
+
+    private static void cadastrarFuncionario(Scanner sc, FuncionarioController ctrl) {
+        System.out.print("Nome: ");
+        String nome = sc.nextLine();
+        System.out.print("Endereço: ");
+        String endereco = sc.nextLine();
+        System.out.print("Email: ");
+        String email = sc.nextLine();
+        System.out.print("Telefone: ");
+        String telefone = sc.nextLine();
+        System.out.print("Cargo: ");
+        String cargo = sc.nextLine();
+        ctrl.cadastrarFuncionario(new Funcionario(nome, endereco, email, telefone, cargo));
+        System.out.println("Funcionário cadastrado.");
+    }
+
+    private static void registrarEmprestimo(Scanner sc, LivroController lCtrl, UsuarioController uCtrl, EmprestimoController eCtrl) {
+        System.out.print("ID do Livro: ");
+        int livroId = Integer.parseInt(sc.nextLine());
+        System.out.print("ID do Usuário: ");
+        int usuarioId = Integer.parseInt(sc.nextLine());
+        Livro livro = lCtrl.getLivro(livroId);
+        Usuario usuario = uCtrl.getUsuario(usuarioId);
+        System.out.println(eCtrl.registrarEmprestimo(livro, usuario));
+    }
+    
+
+    private static void registrarDevolucao(Scanner sc, EmprestimoController eCtrl) {
+        System.out.print("ID do Empréstimo: ");
+        int emprestimoId = Integer.parseInt(sc.nextLine());
+        System.out.println(eCtrl.registrarDevolucao(emprestimoId));
     }
 }

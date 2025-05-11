@@ -2,81 +2,44 @@ package model;
 
 import java.time.LocalDate;
 
-public class Emprestimo implements Bibliotecavel{
-    private Livro livro;
-    private Usuario usuario;
-    private LocalDate dataEmprestimo;
-    private LocalDate dataDevolucaoPrevista;
-    private LocalDate dataDevolucaoReal;
-    private boolean atrasado;
+public class Emprestimo {
+    private static int contador = 1;
+    private final int id;
+    private final Livro livro;
+    private final Usuario usuario;
+    private final LocalDate dataEmprestimo;
+    private final LocalDate dataDevolucaoPrevista;
+    private LocalDate dataDevolucao;
 
-    public Emprestimo(Livro livro, Usuario usuario, LocalDate dataEmprestimo, LocalDate dataDevolucaoPrevista, LocalDate dataDevolucaoReal, boolean atrasado) {
+    public Emprestimo(Livro livro, Usuario usuario) {
+        this.id = contador++;
         this.livro = livro;
         this.usuario = usuario;
-        this.dataEmprestimo = dataEmprestimo;
-        this.dataDevolucaoPrevista = dataDevolucaoPrevista;
-        this.dataDevolucaoReal = dataDevolucaoReal;
-        this.atrasado = false;
+        this.dataEmprestimo = LocalDate.now();
+        this.dataDevolucaoPrevista = dataEmprestimo.plusDays(14);
+        this.dataDevolucao = null;
     }
 
-    public Livro getLivro() {
-        return livro;
-    }
+    public int getId() { return id; }
+    public Livro getLivro() { return livro; }
+    public Usuario getUsuario() { return usuario; }
+    public LocalDate getDataEmprestimo() { return dataEmprestimo; }
+    public LocalDate getDataDevolucao() { return dataDevolucao; }
+    public LocalDate getDataDevolucaoPrevista() { return dataDevolucaoPrevista; }
 
-    public void setLivro(Livro livro) {
-        this.livro = livro;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public LocalDate getDataEmprestimo() {
-        return dataEmprestimo;
-    }
-
-    public void setDataEmprestimo(LocalDate dataEmprestimo) {
-        this.dataEmprestimo = dataEmprestimo;
-    }
-
-    public LocalDate getDataDevolucaoPrevista() {
-        return dataDevolucaoPrevista;
-    }
-
-    public void setDataDevolucaoPrevista(LocalDate dataDevolucaoPrevista) {
-        this.dataDevolucaoPrevista = dataDevolucaoPrevista;
-    }
-
-    public LocalDate getDataDevolucaoReal() {
-        return dataDevolucaoReal;
-    }
-
-    public void setDataDevolucaoReal(LocalDate dataDevolucaoReal) {
-        this.dataDevolucaoReal = dataDevolucaoReal;
-    }
-
-    public boolean isAtrasado() {
-        return atrasado;
-    }
-
-    public void setAtrasado(boolean atrasado) {
-        this.atrasado = atrasado;
+    public void registrarDevolucao() {
+        this.dataDevolucao = LocalDate.now();
     }
 
     @Override
     public String toString() {
-        return "Emprestimo [livro=" + livro + ", usuario=" + usuario + ", dataEmprestimo=" + dataEmprestimo
-                + ", dataDevolucaoPrevista=" + dataDevolucaoPrevista + ", dataDevolucaoReal=" + dataDevolucaoReal
-                + ", atrasado=" + atrasado + "]";
-    }
-
-    @Override
-    public String getDescricao() {
-        return "Empréstimo do livro '" + livro.getTitulo() + "' para " + usuario.getNome() +
-               ", devolução prevista em " + dataDevolucaoPrevista;
+        return String.format("Empréstimo #%d - Livro: %s | Usuário: %s | Data: %s | Previsto: %s | Devolvido: %s",
+            id,
+            livro.getTitulo(),
+            usuario.getNome(),
+            dataEmprestimo,
+            dataDevolucaoPrevista,
+            dataDevolucao != null ? dataDevolucao : "Pendente"
+        );
     }
 }
