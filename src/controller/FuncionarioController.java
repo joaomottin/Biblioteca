@@ -1,6 +1,8 @@
 package controller;
 
 import model.Funcionario;
+import model.PreCarga;
+
 import java.util.*;
 
 public class FuncionarioController {
@@ -8,6 +10,10 @@ public class FuncionarioController {
 
     public void cadastrarFuncionario(Funcionario f) {
         funcionarios.put(f.getId(), f);
+    }
+    
+    public FuncionarioController(){
+        PreCarga.carregarFuncionarios(this);
     }
 
     public Collection<Funcionario> listarFuncionarios() {
