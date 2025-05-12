@@ -19,7 +19,7 @@ public class EmprestimoController {
         emprestimos.add(e);
         livro.setExemplares(livro.getExemplares() - 1);
         usuario.getEmprestimos().add(e);
-        return "Empréstimo realizado com sucesso.";
+        return "Empréstimo realizado com sucesso. ID: " + e.getId();
     }
 
     public String registrarDevolucao(int emprestimoId) {

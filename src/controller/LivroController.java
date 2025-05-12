@@ -6,10 +6,15 @@ import java.util.stream.Collectors;
 import model.PreCarga;
 
 public class LivroController {
-    private final Map<Integer, Livro> livros = new HashMap<>();
+    private int proximoId = 1;
+    private Map<Integer, Livro> livros = new HashMap<>();
 
-    public void cadastrarLivro(Livro l) {
-        livros.put(l.getId(), l);
+    public void cadastrarLivro(String titulo, String autor, String categoria, int exemplares, int anoPublicacao) {
+        Livro livro = new Livro(titulo, autor, categoria, exemplares, anoPublicacao);
+        livro.setId(proximoId);
+        livros.put(proximoId, livro);
+        System.out.println("✅ Livro cadastrado com ID: " + proximoId);
+        proximoId++;
     }
 
     public LivroController() {

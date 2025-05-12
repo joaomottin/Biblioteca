@@ -74,8 +74,6 @@ public class BibliotecaView {
     }
 
     private static void cadastrarLivro(Scanner sc, LivroController ctrl) {
-        System.out.print("ID: ");
-        int id = Integer.parseInt(sc.nextLine());
         System.out.print("Título: ");
         String titulo = sc.nextLine();
         System.out.print("Autor: ");
@@ -86,7 +84,7 @@ public class BibliotecaView {
         int exemplares = Integer.parseInt(sc.nextLine());
         System.out.print("Ano de Publicação: ");
         int ano = Integer.parseInt(sc.nextLine());
-        ctrl.cadastrarLivro(new Livro(id, titulo, autor, categoria, exemplares, ano));
+        ctrl.cadastrarLivro( titulo, autor, categoria, exemplares, ano);
         System.out.println("Livro cadastrado.");
     }
 

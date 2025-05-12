@@ -1,15 +1,14 @@
 package model;
 
 public class Livro implements Bibliotecavel {
-    private final int id;
+    private int id;
     private String titulo;
     private String autor;
     private String categoria;
     private int exemplares;
     private int anoPublicacao;
 
-    public Livro(int id, String titulo, String autor, String categoria, int exemplares, int anoPublicacao) {
-        this.id = id;
+    public Livro(String titulo, String autor, String categoria, int exemplares, int anoPublicacao) {
         this.titulo = titulo;
         this.autor = autor;
         this.categoria = categoria;
@@ -18,6 +17,7 @@ public class Livro implements Bibliotecavel {
     }
 
     public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
     public String getTitulo() { return titulo; }
     public void setTitulo(String titulo) { this.titulo = titulo; }
     public String getAutor() { return autor; }
